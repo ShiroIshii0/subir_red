@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow border-0 bg-dark text-light">
+    <div class="card-header bg-secondary text-center">
+      <h4 class="mb-0">📘 Subir Nuevo Libro</h4>
+    </div>
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label text-white fw-semibold">{{ field.label }}</label>
+            {{ field|add_class:"form-control bg-dark text-white border-light" }}
+            
+            {% if field.help_text %}
+              <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+            
+            {% for error in field.errors %}
+              <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+
+        <div class="d-grid mt-4">
+          <button type="submit" class="btn btn-outline-light btn-lg">
+            💾 Guardar Libro
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

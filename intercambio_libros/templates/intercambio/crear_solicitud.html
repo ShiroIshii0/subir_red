@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card bg-dark text-white shadow-lg">
+    <div class="card-header text-center bg-secondary">
+      <h4 class="mb-0">📖 Crear Solicitud de Intercambio</h4>
+    </div>
+
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+
+        <!-- Libro ofrecido -->
+        <div class="mb-4">
+          <label for="libro_ofrecido" class="form-label fw-semibold">📘 Elige tu libro a ofrecer:</label>
+          <select name="libro_ofrecido" class="form-select bg-dark text-white border-light" required>
+            {% for libro in mis_libros %}
+              <option value="{{ libro.id }}">{{ libro.titulo }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Libro solicitado -->
+        <div class="mb-4">
+          <label for="libro_solicitado" class="form-label fw-semibold">📚 Elige el libro que deseas:</label>
+          <select name="libro_solicitado" class="form-select bg-dark text-white border-light" required>
+            {% for libro in libros_disponibles %}
+              <option value="{{ libro.id }}">{{ libro.titulo }} (de {{ libro.propietario.username }})</option>
+            {% empty %}
+              <option disabled>No hay libros disponibles para intercambio.</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Botón -->
+        <button type="submit" class="btn btn-outline-light w-100">Enviar Solicitud</button>
+      </form>
+    </div>
+
+    <div class="card-footer text-center">
+      <a href="{% url 'intercambio:listar_solicitudes' %}" class="btn btn-sm btn-link text-light">Volver a la lista de solicitudes</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

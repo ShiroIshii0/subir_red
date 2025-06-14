@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Mis Libros</h2>
+  <a href="{% url 'libros:crear_libro' %}">Nuevo Libro</a>
+  <ul>
+    {% for libro in libros %}
+      <li>
+        {{ libro.titulo }} - {{ libro.autor }}
+        <a href="{% url 'libros:editar_libro' libro.id %}">Editar</a>
+        <a href="{% url 'libros:eliminar_libro' libro.id %}">Eliminar</a>
+      </li>
+    {% empty %}
+      <li>No tienes libros aún.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

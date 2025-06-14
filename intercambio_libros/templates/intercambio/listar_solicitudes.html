@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Lista de Solicitudes de Intercambio</h1>
+
+{% if solicitudes %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Solicitante</th>
+                <th>Receptor</th>
+                <th>Libro Ofrecido</th>
+                <th>Libro Solicitado</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for solicitud in solicitudes %}
+            <tr>
+                <td>{{ solicitud.id }}</td>
+                <td>{{ solicitud.solicitante.username }}</td>
+                <td>{{ solicitud.receptor.username }}</td>
+                <td>{{ solicitud.libro_ofrecido.titulo }}</td>
+                <td>{{ solicitud.libro_solicitado.titulo }}</td>
+                <td>{{ solicitud.estado|capfirst }}</td>
+                <td>
+                    <a href="{% url 'intercambio:detalle_solicitud' solicitud.id %}" class="btn btn-info btn-sm">Ver Detalle</a>
+                    
+                    {% if solicitud.estado == 'pendiente' %}
+                        <a href="{% url 'intercambio:aceptar_solicitud' solicitud.id %}" class="btn btn-success btn-sm">Aceptar</a>
+                        <a href="{% url 'intercambio:rechazar_solicitud' solicitud.id %}" class="btn btn-danger btn-sm">Rechazar</a>
+                    {% else %}
+                        <span class="text-muted">Ya {{ solicitud.estado }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay solicitudes de intercambio registradas.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">📚 Lista de Libros Disponibles</h2>
+
+    <div class="row">
+        {% for libro in libros %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow">
+                    {% if libro.portada %}
+                        <img src="{{ libro.portada.url }}" class="card-img-top" alt="Portada de {{ libro.titulo }}">
+                    {% else %}
+                        <img src="{% static 'imagenes/default_cover.png' %}" class="card-img-top" alt="Sin portada">
+                    {% endif %}
+                    <div class="card-body bg-light">
+                        <h5 class="card-title">{{ libro.titulo }}</h5>
+                        <p class="card-text"><strong>Autor:</strong> {{ libro.autor }}</p>
+                        {% if libro.descripcion %}
+                          <p class="card-text">{{ libro.descripcion|truncatewords:15 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center">No hay libros disponibles en este momento.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

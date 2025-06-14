@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>📚 Historial de acciones</h2>
+
+{% if historial %}
+<ul>
+    {% for registro in historial %}
+    <li>
+        {{ registro.fecha|date:"Y-m-d H:i" }} - {{ registro.get_accion_display }} - 
+        Solicitud ID: {{ registro.solicitud.id }} - 
+        Libro solicitado: {{ registro.solicitud.libro_solicitado.titulo }}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No hay registros en el historial.</p>
+{% endif %}
+
+<a href="{% url 'intercambio:listar_solicitudes' %}">Volver a solicitudes</a>
+{% endblock %}

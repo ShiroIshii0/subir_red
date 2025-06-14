@@ -1,36 +1,127 @@
-<!-- templates/base.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Plataforma de Intercambio de Libros</title>
+    <title>{% block title %}Plataforma de Intercambio de Libros{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body>
-    <h1> 📖 Plataforma de Intercambio de Libros</h1>
 
-    <nav style="background-color:rgb(42, 189, 132); padding: 25px;">
-        <a href="{% url 'home' %}">Inicio</a>
-       
-        {% if user.is_authenticated %}
-            <a href=" ">Subir libros</a>
-            <a href="">Ver historial</a>
-            <span>Bienvenido {{ user.username }} </span>
-            <form action="{% url 'logout' %}" method="post" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer;">
-                    Cerrar sesión
-                </button>
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}">Iniciar sesión</a>
-            <a href="{% url "registrar" %}">Registrarse</a>
-        {% endif %}
+<body style="background-color:rgb(173, 173, 173);">
+
+    <!-- NAVBAR PRINCIPAL -->
+    <nav class="navbar navbar-expand navbar-blanco-negro">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white fw-bold" href="{% url 'home' %}">Inicio</a>
+            <div class="navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        {% if user.is_authenticated %}
+                            <a class="nav-link text-white" href="{% url 'libros:lista_libros_publico' %}">Libros disponibles</a>
+                        {% else %}
+                            <a class="nav-link text-white" href="{% url 'registrar' %}">Libros disponibles</a>
+                        {% endif %}
+                    </li>
+
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'libros:crear_libro' %}">Subir libros</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'intercambio:listar_solicitudes' %}">Intercambios</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'historial:listar_historial' %}">Ver historial</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'intercambio:crear_solicitud' %}">Crear intercambio</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'libros:lista_libros' %}">Mis libros</a></li>
+                    {% endif %}
+                </ul>
+
+                <!-- Autenticación -->
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item text-white me-3 align-self-center">Bienvenido {{ user.username }}</li>
+                        <li class="nav-item">
+                            <form action="{% url 'logout' %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-light btn-sm">Cerrar sesión</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'login' %}">Iniciar sesión</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'registrar' %}">Registrarse</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
     </nav>
-    
-    {% block content %}
 
-    {% endblock %}
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="container py-4">
+        {% if messages %}
+            <div class="alert alert-info">
+                <ul class="mb-0">
+                    {% for message in messages %}
+                        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </div>
 
-   
+    {# SOLO MOSTRAR EN INICIO #}
+    {% if request.resolver_match.url_name == 'home' %}
+        <section class="sobre-la-plataforma p-5 text-white" style="background-color: darkslategrey;">
+            <div class="container">
+                <h2 class="text-center mb-4">¿Qué es esta Plataforma?</h2>
+                <p class="lead">
+                    Plataforma de Intercambio de Libros creada con Django y Bootstrap.
+                    Permite publicar libros con portada, intercambiar con otros usuarios,
+                    gestionar historial y tener una experiencia moderna, visual y segura.
+                </p>
+                <div class="row my-4">
+                    <div class="col-md-6">
+                        <ul>
+                            <li>✔ Registro e inicio de sesión seguro</li>
+                            <li>✔ Publicación de libros con imágenes</li>
+                            <li>✔ Exploración de libros públicos</li>
+                            <li>✔ Solicitudes de intercambio privadas</li>
+                            <li>✔ Gestión de historial personal</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.wZYm3iTHxa5iWMJEqLXwagHaDs?rs=1&pid=ImgDetMain" class="img-fluid rounded shadow" alt="Intercambio de libros">
+                    </div>
+                </div>
+
+                <div class="row my-4">
+                    <div class="col-md-6 order-md-2">
+                        <h4>Estructura técnica:</h4>
+                        <p>
+                            Usamos <strong>Django</strong> (MVC y ORM), <strong>SQLite</strong> como base de datos ligera,
+                            y <strong>Bootstrap</strong> para diseño responsivo y moderno. Las imágenes se sirven desde
+                            el sistema de archivos gestionado por Django en desarrollo.
+                        </p>
+                    </div>
+                    <div class="col-md-6 order-md-1">
+                        <img src="https://th.bing.com/th/id/R.4a0c0f8d7e0a0e2ba902074602b18236?rik=23nKExieWvcFBQ&pid=ImgRaw&r=0" class="img-fluid rounded shadow" alt="Estructura técnica">
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <p class="text-light">Explora, comparte y conecta a través de los libros.</p>
+                    <a href="{% url 'registrar' %}" class="btn btn-outline-light">Registrarse ahora</a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-dark text-white text-center py-3">
+            <p class="mb-0">© 2025 Plataforma de Intercambio de Libros. Todos los derechos reservados.</p>
+            <p class="mb-0">Desarrollado por el [ Grupo 15]</p>
+        </footer>
+    {% endif %}
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/navbar.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

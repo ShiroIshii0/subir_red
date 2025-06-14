@@ -36,12 +36,15 @@ class PerfilUsuario(models.Model):
     def es_moderador(self):
         return self.rol == 'moderador'
 
-# Señales para crear o actualizar perfil automáticamente al crear usuario
+
+# Señales fuera de la clase
 @receiver(post_save, sender=User)
 def crear_perfil_usuario(sender, instance, created, **kwargs):
     if created:
-        PerfilUsuario.objects.create(usuario=instance)
+        rol = 'administrador' if instance.is_superuser else 'usuario'
+        PerfilUsuario.objects.create(usuario=instance, rol=rol)
 
 @receiver(post_save, sender=User)
 def guardar_perfil_usuario(sender, instance, **kwargs):
-    instance.perfil.save()
+    if hasattr(instance, 'perfil'):
+        instance.perfil.save()

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Detalle de la Solicitud de Intercambio</h1>
+
+<div>
+    <p><strong>Solicitante:</strong> {{ solicitud.solicitante.username }}</p>
+    <p><strong>Receptor:</strong> {{ solicitud.receptor.username }}</p>
+    <p><strong>Libro Ofrecido:</strong> {{ solicitud.libro_ofrecido.titulo }}</p>
+    <p><strong>Libro Solicitado:</strong> {{ solicitud.libro_solicitado.titulo }}</p>
+    <p><strong>Estado:</strong> {{ solicitud.estado|capfirst }}</p>
+    <p><strong>Fecha de Solicitud:</strong> {{ solicitud.fecha_solicitud|date:"d M Y, H:i" }}</p>
+</div>
+
+{% if solicitud.estado == 'pendiente' %}
+    <div style="margin-top: 20px;">
+        <a href="{% url 'intercambio:aceptar_solicitud' solicitud.id %}" class="btn btn-success">Aceptar Solicitud</a>
+        <a href="{% url 'intercambio:rechazar_solicitud' solicitud.id %}" class="btn btn-danger">Rechazar Solicitud</a>
+    </div>
+{% else %}
+    <p><strong>Esta solicitud ya ha sido {{ solicitud.estado }}.</strong></p>
+{% endif %}
+
+<a href="{% url 'intercambio:listar_solicitudes' %}">Volver a la lista de solicitudes</a>
+{% endblock %}
