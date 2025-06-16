@@ -29,4 +29,7 @@ env\Scripts\activate
 python3 -m venv env
 source env/bin/activate
 ```
-
+4. Instalar dependencias: `pip install -r requirements.txt`
+5. Ejecutar migraciones: `python manage.py migrate`
+6. Crear superusuario: `python manage.py createsuperuser`
+7. Iniciar servidor: `python manage.py runserver
