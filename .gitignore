@@ -1,18 +1,39 @@
-# Python
+### Django ###
+*.log
+*.pot
 *.pyc
 __pycache__/
-
-# Django
 db.sqlite3
-*.log
+media/
 
-# Entorno virtual
+# */migrations/*.py  # ¡NO DESCOMENTAR! (eliminaría tus migraciones)
+
+### Entorno virtual ###
 venv/
 .env
+.env.local
+*.env
 
-# Archivos de IDE
-*.vscode/
-*.idea/
+### IDE/Editor ###
+.vscode/
+.idea/
+*.swp
+*.sublime-*
 
-# Otros
-*.DS_Store
+### Sistema ###
+.DS_Store
+Thumbs.db
+
+### Python ###
+*.py[cod]
+*$py.class
+
+### Jupyter Notebook ###
+.ipynb_checkpoints
+
+### Archivos de respaldo ###
+*.bak
+*.tmp
+
+### Docker (opcional) ###
+docker-compose.override.yml
