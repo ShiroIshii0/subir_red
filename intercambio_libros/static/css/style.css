@@ -1,24 +1,8 @@
-/* -------------------------------------- */
-/* 1. ESTRUCTURA GENERAL                  */
-/* -------------------------------------- */
-.body{
-    ;
-}
 
 .titulo_central {
     text-align: center;
     margin-top: 20px;
     color: #b3b7bb;
-}
-.fondo_login {
-    background: linear-gradient(rgba(85, 84, 84, 0.6), rgba(18, 18, 18, 0.6)),
-                url('https://tse1.mm.bing.net/th/id/OIP.DfAHvhQVOpo3Ftn-bG_SEAHaEK?rs=1&pid=ImgDetMain') center/cover no-repeat;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    margin-top: ;
 }
 
 /* -------------------------------------- */
@@ -40,20 +24,6 @@ p {
 /* 3. FORMULARIOS                         */
 /* -------------------------------------- */
 
-.formulario-registro,
-.formulario-registro h2,
-.formulario-registro label,
-.formulario-registro p,
-.formulario-registro input,
-.formulario-registro .helptext {
-    color: white;
-}
-.formulario-registro input {
-    background-color: #f8f8f8;
-    border: 1px solid #ccc;
-    color: white;
-}
-
 
 form {
     max-width: 400px;
@@ -61,7 +31,7 @@ form {
     padding: 30px;
     background-color: transparent;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(241, 238, 238, 0.973);
+    box-shadow: 0 0 10px rgba(78, 78, 78, 0.973);
 }
 
 form p {
@@ -72,7 +42,7 @@ form label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
-    color: #ebebeb;
+    color: #000000;
 }
 
 form input {
@@ -97,12 +67,13 @@ form input:focus {
     background-color: rgba(167, 130, 130, 0.15);  /* Más claro que rgba(0,0,0,0.6) */
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #f0f0f0;
+    color: #3a3939;
     border-radius: 12px;
     padding: 30px;
     max-width: 400px;
     margin: 0 auto;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    
 }
 
 
@@ -226,17 +197,14 @@ button[type="submit"]:hover {
 /* Imagen a la izquierda */
 .registro-imagen {
   flex: 0 0 70%;
-  background-image: url('https://drive.google.com/file/d/1mU-7fz-FmcV0yZXTdrpxhC0nJul4dklz/view?usp=sharing');
   background-size: cover;
   background-position: top center;
   background-repeat: no-repeat;
 
-  margin-top: -19px;              /* Elimina el recorte superior */
+  margin-top: -19px;             
   margin-left: -90px;
-  width: 100px;               /* Lo mantienes, pero puedes probar con más si se ve muy estrecho */
-
-  height: 100vh;              /* Esto la estira hasta el fondo de la pantalla */
-  border-top-right-radius: 12px;
+  width: 100px;             
+  
   border-bottom-right-radius: 12px;
   height: 100%;
 }
@@ -244,8 +212,11 @@ button[type="submit"]:hover {
   background: linear-gradient(to right, #2e2a52, #ff8000);
 }
 
+.formulario-registro {
+ margin-left: 20px;
+}
 
-
-
-
+.imagen_gato{
+    
+}
 

@@ -5,21 +5,42 @@
 <div class="container mt-5">
   <div class="card shadow border-0 bg-dark text-light">
     <div class="card-header bg-secondary text-center">
-      <h4 class="mb-0">📘 Subir Nuevo Libro</h4>
+      <h4 class="mb-0">📘 Subir Nuevo Libro y Actualizar Teléfono</h4>
     </div>
     <div class="card-body">
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        
+
+        <!-- Campos del libro -->
+        <h5 class="text-light mb-3">📚 Datos del libro</h5>
         {% for field in form %}
           <div class="mb-3">
             <label class="form-label text-white fw-semibold">{{ field.label }}</label>
-            {{ field|add_class:"form-control bg-dark text-white border-light" }}
-            
-            {% if field.help_text %}
-              <small class="form-text text-muted">{{ field.help_text }}</small>
+
+            {% if field.name == "disponible" %}
+              <div class="form-check">
+                {{ field|add_class:"form-check-input" }}
+                <label class="form-check-label" for="{{ field.id_for_label }}">
+                  ¿Está disponible?
+                </label>
+              </div>
+            {% else %}
+              {{ field|add_class:"form-control bg-dark text-white border-light" }}
             {% endif %}
-            
+
+            {% for error in field.errors %}
+              <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+
+        <!-- Campo del teléfono -->
+        <hr class="text-light">
+        <h5 class="text-light mb-3">📱 Actualizar número de celular</h5>
+        {% for field in telefono_form %}
+          <div class="mb-3">
+            <label class="form-label text-white fw-semibold">{{ field.label }}</label>
+            {{ field|add_class:"form-control bg-dark text-white border-light" }}
             {% for error in field.errors %}
               <div class="text-danger small">{{ error }}</div>
             {% endfor %}
@@ -28,7 +49,7 @@
 
         <div class="d-grid mt-4">
           <button type="submit" class="btn btn-outline-light btn-lg">
-            💾 Guardar Libro
+            💾 Guardar Libro y Teléfono
           </button>
         </div>
       </form>

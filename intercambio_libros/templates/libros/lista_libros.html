@@ -1,16 +1,57 @@
 {% extends "base.html" %}
+{% block title %}Mis Libros{% endblock %}
+
 {% block content %}
-  <h2>Mis Libros</h2>
-  <a href="{% url 'libros:crear_libro' %}">Nuevo Libro</a>
-  <ul>
-    {% for libro in libros %}
-      <li>
-        {{ libro.titulo }} - {{ libro.autor }}
-        <a href="{% url 'libros:editar_libro' libro.id %}">Editar</a>
-        <a href="{% url 'libros:eliminar_libro' libro.id %}">Eliminar</a>
-      </li>
-    {% empty %}
-      <li>No tienes libros aún.</li>
-    {% endfor %}
-  </ul>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-dark">📚 Mis Libros</h2>
+    <a href="{% url 'libros:crear_libro' %}" class="btn btn-primary">➕ Subir Nuevo Libro</a>
+  </div>
+
+  {% if libros %}
+    <div class="table-responsive">
+      <table class="table table-dark table-bordered table-hover align-middle">
+        <thead class="table-secondary text-dark">
+          <tr>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Portada</th>
+            <th>Teléfono</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for libro in libros %}
+            <tr>
+              <td>{{ libro.titulo }}</td>
+              <td>{{ libro.autor }}</td>
+              <td>
+                {% if libro.portada %}
+                  <img src="{{ libro.portada.url }}" alt="Portada de {{ libro.titulo }}" class="img-thumbnail" style="max-height: 100px;">
+                {% else %}
+                  <span class="text-muted">Sin imagen</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if libro.telefono %}
+                  📞 {{ libro.telefono }}
+                {% else %}
+                  <span class="text-muted">No registrado</span>
+                {% endif %}
+              </td>
+              <td>
+                <a href="{% url 'libros:editar_libro' libro.id %}" class="btn btn-sm btn-warning">✏️ Editar</a>
+                <a href="{% url 'libros:eliminar_libro' libro.id %}" class="btn btn-sm btn-danger">🗑️ Eliminar</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center">
+      No tienes libros aún. ¡Sube uno nuevo para comenzar!
+    </div>
+  {% endif %}
+</div>
 {% endblock %}

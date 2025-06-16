@@ -2,30 +2,58 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="text-center mb-4">📚 Lista de Libros Disponibles</h2>
 
-    <div class="row">
-        {% for libro in libros %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow">
-                    {% if libro.portada %}
-                        <img src="{{ libro.portada.url }}" class="card-img-top" alt="Portada de {{ libro.titulo }}">
-                    {% else %}
-                        <img src="{% static 'imagenes/default_cover.png' %}" class="card-img-top" alt="Sin portada">
-                    {% endif %}
-                    <div class="card-body bg-light">
-                        <h5 class="card-title">{{ libro.titulo }}</h5>
-                        <p class="card-text"><strong>Autor:</strong> {{ libro.autor }}</p>
-                        {% if libro.descripcion %}
-                          <p class="card-text">{{ libro.descripcion|truncatewords:15 }}</p>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        {% empty %}
-            <p class="text-center">No hay libros disponibles en este momento.</p>
-        {% endfor %}
-    </div>
+<style>
+  .imagen-portada {
+    height: 300px;             
+    width: 200px;              
+    object-fit: cover;         
+    object-position: center;   
+    margin-left: 75px;
+  }
+</style>
+
+<div class="container mt-4">
+  <h2 class="text-center mb-4">📚 Lista de Libros Disponibles</h2>
+
+  <div class="row">
+    {% for libro in libros %}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow">
+
+          {% if libro.portada %}
+            <img src="{{ libro.portada.url }}" class="card-img-top imagen-portada" alt="Portada de {{ libro.titulo }}">
+          {% else %}
+            <img src="{% static 'imagenes/default_cover.png' %}" class="card-img-top imagen-portada" alt="Sin portada">
+          {% endif %}
+
+          <div class="card-body bg-light">
+            <h5 class="card-title">{{ libro.titulo }}</h5>
+            <p class="card-text"><strong>Autor:</strong> {{ libro.autor }}</p>
+            {% if libro.descripcion %}
+              <p class="card-text">{{ libro.descripcion|truncatewords:15 }}</p>
+            {% endif %}
+
+            {% if libro.telefono %}
+              <p class="card-text"><strong>📞 Contacto:</strong> {{ libro.propietario.perfil.telefono }}</p>
+            {% else %}
+              <p class="card-text text-muted">📞 No disponible</p>
+            {% endif %}
+
+            <!-- Botón de eliminación solo para superusuarios -->
+            {% if user.is_authenticated and user.is_superuser %}
+              <a href="{% url 'libros:eliminar_libro' libro.pk %}" class="btn btn-sm btn-danger mt-2">
+                🗑️ Eliminar como Admin
+              </a>
+            {% endif %}
+          </div>
+
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-center">No hay libros disponibles en este momento.</p>
+    {% endfor %}
+  </div>
 </div>
+
 {% endblock %}

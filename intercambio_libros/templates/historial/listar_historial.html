@@ -1,21 +1,36 @@
 {% extends "base.html" %}
 
+{% block title %}Historial de Acciones{% endblock %}
+
 {% block content %}
-<h2>📚 Historial de acciones</h2>
+<div class="container mt-4">
+  <h2 class="mb-4 text-dark">📚 Historial de Acciones</h2>
 
-{% if historial %}
-<ul>
-    {% for registro in historial %}
-    <li>
-        {{ registro.fecha|date:"Y-m-d H:i" }} - {{ registro.get_accion_display }} - 
-        Solicitud ID: {{ registro.solicitud.id }} - 
-        Libro solicitado: {{ registro.solicitud.libro_solicitado.titulo }}
-    </li>
-    {% endfor %}
-</ul>
-{% else %}
-<p>No hay registros en el historial.</p>
-{% endif %}
+  {% if historial %}
+    <div class="list-group">
+      {% for registro in historial %}
+        <div class="list-group-item list-group-item-action bg-light border shadow-sm mb-2">
+          <div class="d-flex justify-content-between">
+            <small class="text-muted">
+              {{ registro.fecha|date:"Y-m-d H:i" }}
+            </small>
+            <span class="badge bg-secondary">{{ registro.get_accion_display }}</span>
+          </div>
+          <div class="mt-2">
+            <strong>Solicitud ID:</strong> {{ registro.solicitud.id }} <br>
+            <strong>Libro solicitado:</strong> {{ registro.solicitud.libro_solicitado.titulo }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info mt-3 text-center">
+      No hay registros en el historial.
+    </div>
+  {% endif %}
 
-<a href="{% url 'intercambio:listar_solicitudes' %}">Volver a solicitudes</a>
+  <div class="mt-4">
+    <a href="{% url 'intercambio:listar_solicitudes' %}" class="btn btn-outline-primary">⬅️ Volver a solicitudes</a>
+  </div>
+</div>
 {% endblock %}

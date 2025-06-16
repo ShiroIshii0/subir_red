@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from .models import SolicitudIntercambio
 from libros.models import Libro
-from historial.models import Historial  # 👈 Importa el historial
+from historial.models import Historial
 
 @login_required
 def crear_solicitud(request):
@@ -20,7 +21,6 @@ def crear_solicitud(request):
             libro_solicitado=libro_solicitado
         )
 
-        # Crear historial
         Historial.objects.create(
             usuario=request.user,
             solicitud=solicitud,
@@ -37,49 +37,60 @@ def crear_solicitud(request):
         'mis_libros': mis_libros
     })
 
+@login_required
 def listar_solicitudes(request):
-    solicitudes = SolicitudIntercambio.objects.all()
+    # Ver solo solicitudes del usuario (opcional, según lógica)
+    solicitudes = SolicitudIntercambio.objects.filter(receptor=request.user) | SolicitudIntercambio.objects.filter(solicitante=request.user)
     return render(request, 'intercambio/listar_solicitudes.html', {'solicitudes': solicitudes})
 
-@login_required
 def detalle_solicitud(request, solicitud_id):
     solicitud = get_object_or_404(SolicitudIntercambio, id=solicitud_id)
-    return render(request, 'intercambio/detalle_solicitud.html', {'solicitud': solicitud})
+    if request.user != solicitud.solicitante and request.user != solicitud.receptor:
+        messages.warning(request, "No tienes permiso para ver los detalles de esta solicitud.")
+        return redirect('intercambio:listar_solicitudes')
 
+    return render(request, 'intercambio/detalle_solicitud.html', {'solicitud': solicitud})
 @login_required
 def aceptar_solicitud(request, solicitud_id):
     solicitud = get_object_or_404(SolicitudIntercambio, id=solicitud_id)
+
+    # Solo el receptor puede aceptar
+    if solicitud.receptor != request.user:
+        messages.warning(request, "No tienes permiso para aceptar esta solicitud.")
+        return redirect('intercambio:listar_solicitudes')
+
     if solicitud.estado == 'pendiente':
         solicitud.estado = 'aceptado'
         solicitud.save()
 
-        # Crear historial
         Historial.objects.create(
             usuario=request.user,
             solicitud=solicitud,
             accion='solicitud_aceptada'
         )
-
         messages.success(request, '¡Solicitud aceptada!')
 
     return redirect('intercambio:listar_solicitudes')
 
+
 @login_required
 def rechazar_solicitud(request, solicitud_id):
     solicitud = get_object_or_404(SolicitudIntercambio, id=solicitud_id)
+
+    # Solo el receptor puede rechazar
+    if solicitud.receptor != request.user:
+        messages.warning(request, "No tienes permiso para rechazar esta solicitud.")
+        return redirect('intercambio:listar_solicitudes')
+
     if solicitud.estado == 'pendiente':
         solicitud.estado = 'rechazado'
         solicitud.save()
 
-        # Crear historial
         Historial.objects.create(
             usuario=request.user,
             solicitud=solicitud,
             accion='solicitud_rechazada'
         )
-
         messages.success(request, '¡Solicitud rechazada!')
 
     return redirect('intercambio:listar_solicitudes')
-
-
