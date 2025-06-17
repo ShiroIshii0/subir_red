@@ -23,10 +23,12 @@ cd avance_proyecto
 ```bash
 # En Windows
 python -m venv env
+pip install -r requirements.txt
 env\Scripts\activate
 
 # En Linux/Mac
 python3 -m venv env
+pip install -r requirements.txt
 source env/bin/activate
 ```
 4. Instalar dependencias: `pip install -r requirements.txt`
